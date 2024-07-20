@@ -19,6 +19,7 @@ class Ball:
         z,
         spawnNewBall,
         velocity,
+        gravity,
     ):
         self.id = id
         self.mass = mass
@@ -41,6 +42,7 @@ class Ball:
         self.dampingFactor = 0.9
         self.radius = 20
         self.spawnNewBall = spawnNewBall
+        self.gravity = gravity
 
     def getForces(self):
         return None
@@ -54,7 +56,7 @@ class Ball:
         self.y = newY
 
     def applyGravity(self):
-        gravityConstant = 9.81 / 60
+        gravityConstant = self.gravity / 60
         if self.hasGravity:
             self.velocity[1] += gravityConstant
 
@@ -134,6 +136,7 @@ class Ball:
                 z=0,
                 spawnNewBall=False,  # New balls won't spawn further balls
                 velocity=newBallVelocity,
+                gravity=self.gravity,
             )
         return None
 
