@@ -119,11 +119,9 @@ class Ball:
             newBallX = self.x
             newBallY = self.y
             newBallVelocity = [self.velocity[0], self.velocity[1]]
-            new_ball_radius = 10
-            new_ball_mass = 1.0
             return Ball(
                 id=random.randint(100000, 100000000),
-                mass=new_ball_mass,
+                mass=1.0,
                 angle=0,
                 colour=self.randomColour(),
                 hasGravity=True,
