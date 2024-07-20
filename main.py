@@ -1,4 +1,5 @@
 import pygame
+import pygame_gui
 from Ball import Ball
 import random
 import argparse
@@ -16,6 +17,15 @@ def main(spawnNewBall):
 
     clock = pygame.time.Clock()
 
+    manager = pygame_gui.UIManager((600, 600))
+
+    gravitySlider = pygame_gui.elements.ui_horizontal_slider.UIHorizontalSlider(
+        relative_rect=pygame.Rect((150, 10), (300, 25)),
+        start_value=9.81,
+        value_range=(0.0, 20.0),
+        manager=manager,
+    )
+
     pygame.font.init()
     font = pygame.font.Font(None, 36)
 
@@ -26,6 +36,8 @@ def main(spawnNewBall):
         return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
 
     while running:
+        time_delta = clock.tick(60) / 1000.0
+
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -45,6 +57,7 @@ def main(spawnNewBall):
                     z=0,
                     spawnNewBall=spawnNewBall,
                     velocity=[0.0, 0.0],
+                    gravity=gravitySlider.get_current_value(),
                 )
                 balls.append(newBall)
             if event.type == pygame.KEYDOWN:
@@ -67,8 +80,16 @@ def main(spawnNewBall):
                         ball.velocity[1] += random.randint(1, 15)
                         ball.velocity[1] -= random.randint(1, 15)
 
-        # Clear the screen
+            manager.process_events(event)
+
+        manager.update(time_delta)
+
         screen.fill(background_colour)
+
+        # Update gravity for all balls
+        currentGravity = gravitySlider.get_current_value()
+        for ball in balls:
+            ball.gravity = currentGravity
 
         # Update all balls
         for ball in balls:
@@ -92,22 +113,21 @@ def main(spawnNewBall):
         for ball in balls:
             ball.draw(screen)
 
-        # Display FPS and Gravity
+        # Display FPS
         fps = clock.get_fps()
-        gravity = (
-            balls[0].velocity[1] if balls else 0
-        )  # Example: using the first ball's gravity
-
         fpsText = font.render(f"FPS: {int(fps)}", True, (0, 0, 0))
-        # gravityText = font.render(f"Gravity: {gravity:.2f}", True, (0, 0, 0))
-
         screen.blit(fpsText, (10, 10))
-        # screen.blit(gravityText, (10, 50))
+
+        gravityText = font.render(
+            f"Gravity: {gravitySlider.get_current_value():.2f}m/s", True, (0, 0, 0)
+        )
+        screen.blit(gravityText, (10, 50))
+
+        # Draw the UI
+        manager.draw_ui(screen)
 
         # Update the display
         pygame.display.flip()
-
-        clock.tick(60)
 
     pygame.quit()
 
@@ -122,7 +142,5 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    # Convert the argument to boolean
     spawnNewBall = args.spawn_new_ball == "True"
-
     main(spawnNewBall)
