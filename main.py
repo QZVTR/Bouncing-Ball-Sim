@@ -3,6 +3,7 @@ import pygame_gui
 from Ball import Ball
 import random
 import argparse
+from collections import defaultdict
 
 
 def main(spawnNewBall):
@@ -31,6 +32,7 @@ def main(spawnNewBall):
 
     running = True
     balls = []
+    gridSize = 50
 
     def randomColour():
         return (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
@@ -86,11 +88,18 @@ def main(spawnNewBall):
 
         screen.fill(background_colour)
 
+        grid = defaultdict(list)
+        for ball in balls:
+            gridX = int(ball.x // gridSize)
+            gridY = int(ball.y // gridSize)
+            grid[(gridX, gridY)].append(ball)
+
         # Update gravity for all balls
         currentGravity = gravitySlider.get_current_value()
         for ball in balls:
             ball.gravity = currentGravity
 
+        """
         # Update all balls
         for ball in balls:
             ball.applyGravity()
@@ -105,6 +114,29 @@ def main(spawnNewBall):
                     newBall = balls[i].handleCollision(balls[j])
                     if newBall:
                         newBalls.append(newBall)
+
+        # Add newly spawned balls to the list
+        balls.extend(newBalls)
+        """
+
+        newBalls = []
+        for ball in balls:
+            ball.applyGravity()
+            ball.checkCollisionWall(screenWidth, screenHeight)
+            ball.move()
+
+            gridX = int(ball.x // gridSize)
+            gridY = int(ball.y // gridSize)
+
+            # Check for collisions with balls in the same or adjacent grid cells
+            for dx in range(-1, 2):
+                for dy in range(-1, 2):
+                    adjacentCell = (gridX + dx, gridY + dy)
+                    for otherBall in grid[adjacentCell]:
+                        if ball != otherBall and ball.checkCollision(otherBall):
+                            newBall = ball.handleCollision(otherBall)
+                            if newBall:
+                                newBalls.append(newBall)
 
         # Add newly spawned balls to the list
         balls.extend(newBalls)
