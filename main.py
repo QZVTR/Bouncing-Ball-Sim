@@ -47,6 +47,20 @@ def main(spawnNewBall):
                     velocity=[0.0, 0.0],
                 )
                 balls.append(newBall)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    for ball in balls:
+                        ball.velocity[1] -= 10
+                if event.key == pygame.K_DOWN:
+                    for ball in balls:
+                        ball.velocity[1] += 10
+                if event.key == pygame.K_LEFT:
+                    for ball in balls:
+                        ball.velocity[0] -= 10
+                if event.key == pygame.K_RIGHT:
+                    for ball in balls:
+                        ball.velocity[0] += 10
+
 
         # Clear the screen
         screen.fill(background_colour)
@@ -58,16 +72,16 @@ def main(spawnNewBall):
             ball.move()
 
         # Handle collisions between balls
-        new_balls = []
+        newBalls = []
         for i in range(len(balls)):
             for j in range(i + 1, len(balls)):
                 if balls[i].checkCollision(balls[j]):
-                    new_ball = balls[i].handleCollision(balls[j])
-                    if new_ball:
-                        new_balls.append(new_ball)
+                    newBall = balls[i].handleCollision(balls[j])
+                    if newBall:
+                        newBalls.append(newBall)
 
         # Add newly spawned balls to the list
-        balls.extend(new_balls)
+        balls.extend(newBalls)
 
         # Draw all balls
         for ball in balls:
