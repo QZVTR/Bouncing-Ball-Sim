@@ -117,8 +117,8 @@ class Ball:
         other.velocity[1] -= impulse * self.mass * ny
 
         if self.spawnNewBall:
-            newBallX = self.x
-            newBallY = self.y
+            newBallX = random.randint(0, 600)
+            newBallY = random.randint(0, 600)
             newBallVelocity = [self.velocity[0], self.velocity[1]]
             return Ball(
                 id=random.randint(100000, 100000000),
@@ -142,4 +142,3 @@ class Ball:
 
     def draw(self, screen):
         pygame.draw.circle(screen, self.colour, (int(self.x), int(self.y)), self.radius)
-
