@@ -54,8 +54,9 @@ class Ball:
         self.y = newY
 
     def applyGravity(self):
+        gravityConstant = 9.81 / 60
         if self.hasGravity:
-            self.velocity[1] += 0.01
+            self.velocity[1] += gravityConstant
 
     def move(self):
         self.x += self.velocity[0]
@@ -141,3 +142,4 @@ class Ball:
 
     def draw(self, screen):
         pygame.draw.circle(screen, self.colour, (int(self.x), int(self.y)), self.radius)
+
