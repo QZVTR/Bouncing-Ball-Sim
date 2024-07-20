@@ -60,7 +60,12 @@ def main(spawnNewBall):
                 if event.key == pygame.K_RIGHT:
                     for ball in balls:
                         ball.velocity[0] += 10
-
+                if event.key == pygame.K_SPACE:
+                    for ball in balls:
+                        ball.velocity[0] += random.randint(1, 15)
+                        ball.velocity[0] -= random.randint(1, 15)
+                        ball.velocity[1] += random.randint(1, 15)
+                        ball.velocity[1] -= random.randint(1, 15)
 
         # Clear the screen
         screen.fill(background_colour)
