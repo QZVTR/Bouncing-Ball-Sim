@@ -77,10 +77,12 @@ def main(spawnNewBall):
                         ball.velocity[0] += 10
                 if event.key == pygame.K_SPACE:
                     for ball in balls:
-                        ball.velocity[0] += random.randint(1, 15)
-                        ball.velocity[0] -= random.randint(1, 15)
-                        ball.velocity[1] += random.randint(1, 15)
-                        ball.velocity[1] -= random.randint(1, 15)
+                        ball.velocity[0] += random.randint(-150, 150)
+                        #ball.velocity[0] -= random.randint(1, 15)
+                        ball.velocity[1] += random.randint(-150, 150)
+                        #ball.velocity[1] -= random.randint(1, 15)
+                if event.key == pygame.K_r:
+                    balls.clear()
 
             manager.process_events(event)
 
