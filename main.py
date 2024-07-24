@@ -83,6 +83,11 @@ def main(spawnNewBall):
                         #ball.velocity[1] -= random.randint(1, 15)
                 if event.key == pygame.K_r:
                     balls.clear()
+                if event.key == pygame.K_m:
+                    for ball in balls:
+                        ball.y = screenHeight
+                        ball.velocity[0] = 0
+                        ball.velocity[1] = 0
 
             manager.process_events(event)
 
